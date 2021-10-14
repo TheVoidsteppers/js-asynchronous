@@ -32,7 +32,7 @@ info: |
 
 <div v-click>
 
-我们需要通过这样或那样的方法来管理这段时间间隙的状态---异步
+我们需要通过一种的方法来管理这段时间间隙的状态---异步
 
 </div>
 
@@ -67,7 +67,7 @@ console.log(data);
 
 <div v-click>
 
-现在无法完成的任务将会异步完成，因此并不会出现人们本能地认为会出现的或希望出现的阻塞行为
+现在无法完成的任务将会异步完成，因此并不会出现人们本能地认为会出现的阻塞行为。
 
 </div>
 
@@ -94,8 +94,7 @@ ajax("http://some.url.1", function myCallbackFunction(data) {
 
 # 异步控制台
 
-没有规范或一组需求指定 console.\* 方法族如何工作，它是由宿主环境添加到 JavaScript 中的。
-因此，不同的浏览器和 JavaScript 环境可以按照自己的意愿来实现
+没有规范或一组需求指定 console.\* 方法族如何工作，它是由宿主环境添加到 JavaScript 中的。因此，不同的浏览器和 JavaScript 环境可以按照自己的意愿来实现。
 
 在某些条件下，某些浏览器的 console.log(..) 并不会把传入的内容立即输出。
 
@@ -108,12 +107,12 @@ var foo = [
 
 console.log(foo);
 
-foo[0].b = 1;
+foo[0].a += 1;
 ```
 
 <div v-click>
 
-出现这种情况的主要原因是，在许多程序（不只是 JavaScript）中，I/O 是非常低速的阻塞部分。所以，（从页面 /UI 的角度来说）浏览器在后台异步处理控制台 I/O 能够提高性能
+出现这种情况的主要原因是，在许多程序（不只是 JavaScript）中，I/O 是非常低速的阻塞部分。所以，（从页面/UI 的角度来说）浏览器在后台异步处理控制台 I/O 能够提高性能。
 
 </div>
 
@@ -125,7 +124,7 @@ foo[0].b = 1;
 
 <div v-click>
 
-之前异步行为，比如 ajax，文件上传，用户输入，鼠标点击等，js 是如何实现的？
+之前异步行为，比如 ajax，文件上传，用户点击等，JavaScript 是如何实现的？
 
 </div>
 
@@ -141,9 +140,9 @@ JavaScript 引擎并不是独立运行的，它运行在宿主环境中（Web �
 
 <div v-click>
 
-举例来说，如果你的 JavaScript 程序发出一个 Ajax 请求，从服务器获取一些数据，那你就在一个函数中设置好响应代码，然后 JavaScript 引擎会通知宿主环境：“现在我要暂停执行，你一旦完成网络请求，拿到了数据，就请调用这个回调函数。”
+举例来说，如果你的 JavaScript 程序发出一个 Ajax 请求，要从服务器获取一些数据，那你在一个函数中设置好响应代码，然后 JavaScript 引擎会通知宿主环境：“现在我要暂停执行，你一旦完成网络请求，拿到了数据后，就调用这个回调函数。”
 
-然后浏览器就会设置侦听来自网络的响应，拿到数据之后，就会把回调函数插入到事件循环，以此实现对这个回调的调度执行。
+然后浏览器就会设置侦听来自网络的响应，拿到数据之后，就会把回调函数插入到事件循环中，以此实现对这个回调的调度执行。
 
 </div>
 
@@ -187,25 +186,25 @@ while (true) {
   <h4 style="color: #23970E;">MacroTask（宏任务）:</h4>
   <div style="margin-top: 5px;">setTimeout</div>
   <div style="margin-top: 5px;">setInterval</div>
-  <div style="margin-top: 5px;">setImmediate（浏览器暂时不支持，只有IE10支持, Node）</div>
+  <div style="margin-top: 5px;">setImmediate（只有IE10支持, Node）</div>
   <div style="margin-top: 5px;">I/O</div>
   <div style="margin-top: 5px;">UI Rendering(浏览器独有)</div>
   <h4 style="margin-top: 20px; color: #F99A3C;">MicroTask（微任务）:</h4>
-  <div style="margin-top: 5px;">Process.nextTick（Node独有）</div>
   <div style="margin-top: 5px;">Promise</div>
-  <div style="margin-top: 5px;">Object.observe(废弃)</div>
+  <div style="margin-top: 5px;">Process.nextTick（Node独有）</div>
   <div style="margin-top: 5px;">MutationObserver</div>
+  <div style="margin-top: 5px;">Object.observe(废弃)</div>
 </div>
 
 ---
 
-1. 执行全局 Script 同步代码，这些同步代码有一些是同步语句，有一些是异步语句（比如 setTimeout 等）；遇到异步语句会判断是宏任务还是微任务，并压入对应的队列中。
-2. 全局 Script 代码执行完毕后，调用栈 Stack 会清空；
-3. 从微队列 microtask queue 中取出位于队首的回调任务，放入调用栈 Stack 中执行，执行完后 microtask queue 长度减 1；
-4. 继续取出位于队首的任务，放入调用栈 Stack 中执行，以此类推，直到直到把 microtask queue 中的所有任务都执行完毕。注意，如果在执行 microtask 的过程中，又产生了 microtask，那么会加入到队列的末尾，也会在这个周期被调用执行；
-5. microtask queue 中的所有任务都执行完毕，此时 microtask queue 为空队列，调用栈 Stack 也为空；
-6. 取出宏队列 macrotask queue 中位于队首的任务，放入 Stack 中执行；
-7. 执行完毕后，调用栈 Stack 为空；
+1. 执行全局 Script 同步代码，这些同步代码有一些是同步语句，有一些是异步语句；遇到异步语句会判断是宏任务还是微任务，并压入对应的队列中。
+2. 全局 Script 代码执行完毕后，调用栈会清空；
+3. 从微队列中取出位于队首的回调任务，放入调用栈中执行，执行完后微队列长度减 1；
+4. 继续取出位于队首的任务，放入调用栈中执行，以此类推，直到把微队列中的所有任务都执行完毕。注意，如果在执行 microtask 的过程中，又产生了 microtask，那么会加入到队列的末尾，也会在这个周期被调用执行；
+5. 微队列中的所有任务都执行完毕，此时微队列为空队列，调用栈 Stack 也为空；
+6. 取出宏队列中位于队首的任务，放入调用栈中执行；
+7. 执行完毕后，调用栈为空；
 8. 重复第 3-7 个步骤；
 9. 重复第 3-7 个步骤；
 10. ......
@@ -251,8 +250,10 @@ ajax("http://some.url.2", bar);
 
 线程 1（X 和 Y 是临时内存地址）：
 
-```
-foo():
+```ts
+function foo() {
+  a = a + 1;
+}
 a. 把 a 的值加载到 X
 b. 把 1 保存在 Y
 c. 执行 X 加 Y，结果保存在 X
@@ -261,8 +262,10 @@ d. 把 X 的值保存在 a
 
 线程 2（X 和 Y 是临时内存地址）：
 
-```
-bar():
+```ts
+function bar() {
+  a = a * 2;
+}
 a. 把 a 的值加载到 X
 b. 把 2 保存在 Y
 c. 执行 X 乘 Y，结果保存在 X
@@ -273,7 +276,7 @@ d. 把 X 的值保存在 a
 
 假设两个线程并行执行。它们在临时步骤中使用了共享的内存地址 X 和 Y。
 
-```
+```ts
 1a (把a的值加载到X ==> 20)
 2a (把a的值加载到X ==> 20)
 1b (把1保存在Y ==> 1)
@@ -286,7 +289,7 @@ d. 把 X 的值保存在 a
 
 a 的结果将是 44。但如果按照以下顺序执行呢
 
-```
+```ts
 1a (把a的值加载到X ==> 20)
 2a (把a的值加载到X ==> 20)
 2b (把2保存在Y ==> 2)
@@ -297,7 +300,7 @@ a 的结果将是 44。但如果按照以下顺序执行呢
 2d (把X的值保存在a ==> 21)
 ```
 
-a 的结果将是 21。
+a 的结果将是 21。当然还有更多种可能。。。
 
 ---
 
@@ -649,7 +652,7 @@ console.log(42); // 42
 
 <div v-click>
 
-但是这里有一种场景，其中特定的优化是不安全的
+但是这里有一种场景，其中特定的优化是不安全的。
 
 </div>
 
@@ -687,7 +690,7 @@ b = 30 + c.bar;
 // ...
 ```
 
-理解：代码编写的方式（从上到下的模式）和编译后执行的方式之间的联系非常脆弱。
+要理解：代码编写的方式（从上到下的模式）和编译后执行的方式之间的联系非常脆弱。
 
 ---
 
